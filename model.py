@@ -5,7 +5,6 @@ class model():
 		"""
 		Function returns a keras model object
 		"""  
-		self.name = 'SOCNN'
 		self.input_length=[10]
 		self.output_length=[1]
 
