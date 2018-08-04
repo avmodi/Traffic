@@ -52,7 +52,7 @@ class model():
 			loop_layers[name + 'BN'] = BatchNormalization(name=name + 'BN')
 			offsets.append(loop_layers[name + 'BN'](offsets[-1]))
 			
-			# residual connections for ResNet
+			
 			if self.resnet and (self.connection_freq > 0) and (j > 0) and ((j+1) % self.connection_freq == 0) and (j < self.layers_no['offs'] - 1):
 				offsets.append(keras.layers.add([offsets[-1], offsets[-3 * self.connection_freq + (j==1)]], 
 													   name='offset_residual' + str(j+1)))
@@ -64,7 +64,7 @@ class model():
 	
 		value = Permute((2,1))(value_output)
 	
-		# copmuting weights from significance net
+		
 		sig = Permute((2,1))(sigs[-1])
 		if self.architecture['softmax']:    
 			sig = TimeDistributed(Activation('softmax'), name='softmax')(sig)
@@ -78,8 +78,7 @@ class model():
 										kernel_constraint=nonneg() if self.nonnegative else None),
 								  name= 'out')(main)
 		else: 
-			outL = LocallyConnected1D(filters=1, kernel_size=1,   # dimensions permuted. time dimension treated as separate channels, no connections between different features
-									  padding='valid')
+			outL = LocallyConnected1D(filters=1, kernel_size=1,   									  padding='valid')
 			out = outL(main)
 			
 		main_output = Permute((2,1), name='main_output')(out)
